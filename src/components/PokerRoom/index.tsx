@@ -26,6 +26,7 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   const [mode, setMode] = useState<"normal" | "tshirt">("normal");
   const { t } = useTranslation();
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
+  const [storyURL, setStoryURL] = useState("");
 
   useEffect(() => {
     if (roomData) {
@@ -100,6 +101,17 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
     }
   }, [roomId, roomData]);
 
+  const onSaveStoryURL = async () => {
+    // Guardar la URL de la historia en Firebase
+    await update(ref(database, `rooms/${roomId}`), { storyURL });
+  };
+
+  useEffect(() => {
+    if (roomId && roomData) {
+      setStoryURL(roomData.storyURL || "");
+    }
+  }, [roomId, roomData]);
+
   const toggleMode = async () => {
     const newMode = mode === "normal" ? "tshirt" : "normal";
     setMode(newMode);
@@ -141,6 +153,13 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   const generateInviteURL = () => {
     const currentURL = `${window.location.origin}/join-room/${roomId}`;
     setInviteURL(currentURL);
+  };
+
+  const formatStoryURL = (url: string) => {
+    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+      return "http://" + url;
+    }
+    return url;
   };
 
   const normalOptions = [1, 2, 3, 5, 8, 13, 20, 40, 100];
@@ -192,6 +211,19 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
         </ul>
       </div>
 
+      {storyURL && (
+        <div className={styles.storyURLContainer}>
+          <a
+            href={formatStoryURL(storyURL)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.storyURL}
+          >
+            User Story: {storyURL}
+          </a>
+        </div>
+      )}
+
       {votesVisible ? (
         <div className={styles.voteResults}>
           {Object.entries(participants).map(([name, { vote }]) => (
@@ -207,6 +239,21 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
 
       {isAdmin && (
         <div className={styles.adminButtons}>
+          <div className={styles.storyURLInputContainer}>
+            <input
+              type="text"
+              value={storyURL}
+              onChange={(e) => setStoryURL(e.target.value)}
+              placeholder="User Story URL"
+              className={styles.storyURLInput}
+            />
+            <button
+              className={styles.saveStoryURLButton}
+              onClick={onSaveStoryURL}
+            >
+              {t("saveURL")}
+            </button>
+          </div>
           {!votesVisible && (
             <button className={styles.revealButton} onClick={onRevealVotes}>
               {t("reveal")}

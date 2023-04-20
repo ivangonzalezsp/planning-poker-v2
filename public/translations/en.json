@@ -10,5 +10,6 @@
   "invite": "Invite colleagues",
   "share": "Share this link",
   "reveal": "Reveal",
-  "reset": "Reset voting"
+  "reset": "Reset voting",
+  "saveURL": "Save Ticket URL"
 }

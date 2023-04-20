@@ -10,5 +10,6 @@
   "invite": "Invitar compañeros",
   "share": "Comparte este enlace para invitar a tus compañeros de equipo:",
   "reveal": "Revelar",
-  "reset": "Reiniciar votación"
+  "reset": "Reiniciar votación",
+  "saveURL": "Guardar Ticket URL"
 }

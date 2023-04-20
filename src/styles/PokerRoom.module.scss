@@ -100,6 +100,7 @@
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 2rem;
+    margin-top: 24px;
   
     .voteButton {
       border: none;
@@ -123,7 +124,12 @@
     display: flex;
     justify-content: center;
     gap: 1rem;
-  
+
+    .storyURLInputContainer {
+        display: flex;
+        align-items: center;
+        flex-flow: column;          
+    }
     .revealButton,
     .toggleModeButton,
     .resetButton {
@@ -169,6 +175,18 @@
       .voteResultName {
         margin-right: 0.5rem;
       }
+    }
+  }
+  .storyURL {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #6b46c1;
+    text-decoration: none;
+    border-bottom: 2px solid #6b46c1;
+    transition: color 0.2s ease-in;
+  
+    &:hover {
+      color: #7f3fbf;
     }
   }
   
