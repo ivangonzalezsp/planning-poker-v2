@@ -65,10 +65,40 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   }, [roomId, name, room, router]);
 
   useEffect(() => {
+    if (!roomId) return;
+
+    const unsubscribe = onValue(
+      ref(database, `rooms/${roomId}`),
+      (snapshot) => {
+        const data = snapshot.val();
+        if (!data) return;
+
+        setParticipants(data.participants || {});
+        setVotes(data.votes || {});
+        setVotesVisible(data.reveal || false);
+        setMode(data.mode || "normal");
+      }
+    );
+
+    return () => {
+      off(ref(database, `rooms/${roomId}`), "value", unsubscribe);
+    };
+  }, [roomId]);
+
+  useEffect(() => {
     return () => {
       localStorage.removeItem("roomId");
     };
   }, []);
+
+  useEffect(() => {
+    if (roomId && roomData) {
+      if (roomData.reveal) {
+        setSelectedVote(null);
+      }
+      setVotesVisible(roomData.reveal || false);
+    }
+  }, [roomId, roomData]);
 
   const toggleMode = async () => {
     const newMode = mode === "normal" ? "tshirt" : "normal";
@@ -76,6 +106,9 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
 
     // Update mode state in Firebase
     await update(ref(database, `rooms/${roomId}`), { mode: newMode });
+
+    // Reset reveal state in Firebase
+    await update(ref(database, `rooms/${roomId}`), { reveal: false });
   };
 
   const onVote = async (value: string | number) => {
@@ -84,8 +117,11 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
     await update(roomRef, { voted: true, vote: String(value) });
   };
 
-  const onRevealVotes = () => {
+  const onRevealVotes = async () => {
     setVotesVisible(true);
+
+    // Update reveal state in Firebase
+    await update(ref(database, `rooms/${roomId}`), { reveal: true });
   };
 
   const onResetVotes = async () => {
@@ -97,6 +133,9 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
 
     await update(ref(database), updates);
     setVotesVisible(false);
+
+    // Update reveal state in Firebase
+    await update(ref(database, `rooms/${roomId}`), { reveal: false });
   };
 
   const generateInviteURL = () => {
@@ -168,12 +207,16 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
 
       {isAdmin && (
         <div className={styles.adminButtons}>
-          <button className={styles.revealButton} onClick={onRevealVotes}>
-            {t("reveal")}
-          </button>
-          <button className={styles.resetButton} onClick={onResetVotes}>
-            {t("reset")}
-          </button>
+          {!votesVisible && (
+            <button className={styles.revealButton} onClick={onRevealVotes}>
+              {t("reveal")}
+            </button>
+          )}
+          {votesVisible && (
+            <button className={styles.resetButton} onClick={onResetVotes}>
+              {t("reset")}
+            </button>
+          )}
           <button className={styles.toggleModeButton} onClick={toggleMode}>
             {mode === "normal" ? t("tshirtMode") : t("normalMode")}
           </button>
