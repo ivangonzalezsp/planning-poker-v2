@@ -3,12 +3,13 @@ import { useRouter } from "next/router";
 import styles from "../../styles/Home.module.scss";
 import { push, ref, set } from "firebase/database";
 import { database } from "../../firebase/config";
+import { useTranslation } from "next-i18next";
 
 const Home = () => {
   const [userName, setUserName] = useState("");
   const [roomName, setRoomName] = useState("");
   const router = useRouter();
-
+  const { t, i18n } = useTranslation();
   const createRoom = async () => {
     const newRoomRef = push(ref(database, "rooms"));
     const roomId = newRoomRef.key || "";
@@ -27,20 +28,28 @@ const Home = () => {
     }
   };
 
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.container}>
+        <div className={styles.languageSelector}>
+          <button onClick={() => changeLanguage("en")}>EN</button>
+          <button onClick={() => changeLanguage("es")}>ES</button>
+        </div>
         <div className={styles.content}>
-          <h1 className={styles.title}>Bienvenido a Planning Poker</h1>
+          <h1 className={styles.title}>{t("welcome")}</h1>
           <div className={styles.form}>
-            <label htmlFor="username">Nombre:</label>
+            <label htmlFor="username">{t("name")}</label>
             <input
               id="username"
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
             />
-            <label htmlFor="roomname">Nombre de la sala:</label>
+            <label htmlFor="roomname">{t("roomName")}</label>
             <input
               id="roomname"
               type="text"
@@ -52,7 +61,7 @@ const Home = () => {
               onClick={createRoom}
               disabled={!userName || !roomName}
             >
-              Crear sala
+              {t("create")}
             </button>
           </div>
         </div>

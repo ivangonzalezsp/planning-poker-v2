@@ -3,11 +3,13 @@ import { useState } from "react";
 import styles from "../../styles/JoinRoom.module.scss";
 import { ref, update } from "firebase/database";
 import { database } from "../../firebase/config";
+import { useTranslation } from "next-i18next";
 
 const JoinRoomPage = () => {
   const router = useRouter();
   const { roomId } = router.query;
   const [userName, setUserName] = useState("");
+  const { t } = useTranslation();
 
   const joinRoom = async () => {
     if (!userName) return;
@@ -24,9 +26,9 @@ const JoinRoomPage = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Unirse a la sala</h1>
+      <h1 className={styles.title}>{t("join")}</h1>
       <div className={styles.form}>
-        <label htmlFor="username">Nombre:</label>
+        <label htmlFor="username">{t("name")}</label>
         <input
           id="username"
           type="text"
@@ -38,7 +40,7 @@ const JoinRoomPage = () => {
           onClick={joinRoom}
           disabled={!userName}
         >
-          Unirse a la sala
+          {t("join")}
         </button>
       </div>
     </div>

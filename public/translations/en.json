@@ -1,0 +1,14 @@
+{
+  "welcome": "Welcome to Planning Poker",
+  "roomName": "Room name",
+  "join": "Join a room",
+  "create": "Create a room",
+  "participants": "Participants",
+  "name": "Name",
+  "normalMode": "Switch to normal mode",
+  "tshirtMode": "Switch to T-shirt sizes",
+  "invite": "Invite colleagues",
+  "share": "Share this link",
+  "reveal": "Reveal",
+  "reset": "Reset voting"
+}

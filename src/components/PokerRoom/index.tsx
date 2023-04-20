@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useFirebase } from "../../firebase/useFirebase";
 import { ref, onValue, off, update } from "firebase/database";
 import { database } from "../../firebase/config";
+import { useTranslation } from "next-i18next";
 
 interface PokerRoomProps {
   room: string;
@@ -23,6 +24,7 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   }>({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [mode, setMode] = useState<"normal" | "tshirt">("normal");
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (roomData) {
@@ -126,7 +128,7 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       <h1>Scrum Poker Room</h1>
       <h2>Room ID: {roomId}</h2>
       <div className={styles.participants}>
-        <h2>Participantes</h2>
+        <h2>{t("participants")}</h2>
         <ul>
           {Object.entries(participants).map(([name, { voted }]) => (
             <li key={name}>
@@ -163,19 +165,17 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
             Reiniciar votación
           </button>
           <button className={styles.toggleModeButton} onClick={toggleMode}>
-            {mode === "normal"
-              ? "Cambiar a T-shirt sizes"
-              : "Cambiar a modo normal"}
+            {mode === "normal" ? t("tshirtMode") : t("normalMode")}
           </button>
           <button className={styles.inviteButton} onClick={generateInviteURL}>
-            Invitar compañeros
+            {t("invite")}
           </button>
         </div>
       )}
 
       {inviteURL && (
         <div className={styles.inviteLinkContainer}>
-          <p>Comparte este enlace para invitar a tus compañeros de equipo:</p>
+          <p>{t("share")}</p>
           <input
             type="text"
             readOnly
