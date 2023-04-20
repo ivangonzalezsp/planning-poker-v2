@@ -25,6 +25,7 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [mode, setMode] = useState<"normal" | "tshirt">("normal");
   const { t } = useTranslation();
+  const [selectedVote, setSelectedVote] = useState<string | null>(null);
 
   useEffect(() => {
     if (roomData) {
@@ -69,11 +70,16 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
     };
   }, []);
 
-  const toggleMode = () => {
-    setMode(mode === "normal" ? "tshirt" : "normal");
+  const toggleMode = async () => {
+    const newMode = mode === "normal" ? "tshirt" : "normal";
+    setMode(newMode);
+
+    // Update mode state in Firebase
+    await update(ref(database, `rooms/${roomId}`), { mode: newMode });
   };
 
   const onVote = async (value: string | number) => {
+    setSelectedVote(String(value));
     const roomRef = ref(database, `rooms/${roomId}/participants/${name}`);
     await update(roomRef, { voted: true, vote: String(value) });
   };
@@ -106,7 +112,9 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       ? normalOptions.map((value) => (
           <button
             key={value}
-            className={`${styles.voteButton} ${styles.pokerCard}`}
+            className={`${styles.voteButton} ${styles.pokerCard} ${
+              selectedVote === String(value) ? styles.voteButtonSelected : ""
+            }`}
             onClick={() => onVote(value)}
           >
             {value}
@@ -115,7 +123,9 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       : tshirtOptions.map((value) => (
           <button
             key={value}
-            className={`${styles.voteButton} ${styles.pokerCard}`}
+            className={`${styles.voteButton} ${styles.pokerCard} ${
+              selectedVote === String(value) ? styles.voteButtonSelected : ""
+            }`}
             onClick={() => onVote(value)}
           >
             {value}
