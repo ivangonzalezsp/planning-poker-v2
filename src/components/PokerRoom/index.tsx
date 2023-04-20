@@ -169,10 +169,10 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       {isAdmin && (
         <div className={styles.adminButtons}>
           <button className={styles.revealButton} onClick={onRevealVotes}>
-            Revelar
+            {t("reveal")}
           </button>
           <button className={styles.resetButton} onClick={onResetVotes}>
-            Reiniciar votación
+            {t("reset")}
           </button>
           <button className={styles.toggleModeButton} onClick={toggleMode}>
             {mode === "normal" ? t("tshirtMode") : t("normalMode")}
