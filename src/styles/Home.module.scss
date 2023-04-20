@@ -1,0 +1,48 @@
+@import "./variables";
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  ul {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+
+  li {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  button {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  .form {
+    display: flex;
+    flex-flow: column;
+    input {
+        text-align: center;
+    }
+  }
+  
+  .content {
+    text-align: center;
+  }
+  

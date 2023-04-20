@@ -1,0 +1,40 @@
+@import "./variables";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $main-font;
+  color: $font-color;
+  background-color: $background-color;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+button {
+  background-color: $primary-color;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: darken($primary-color, 5%);
+  }
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid $font-color;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
