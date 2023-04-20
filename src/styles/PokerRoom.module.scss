@@ -59,7 +59,7 @@
 
 .participants {
     position: absolute;
-    top: 2rem;
+    top: 3rem;
     right: 2rem;
   
     h2 {
@@ -187,6 +187,26 @@
   
     &:hover {
       color: #7f3fbf;
+    }
+  }
+
+  .languageSelector {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+  
+    button {
+      background-color: #4a5568;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      margin-left: 4px;
+  
+      &:hover {
+        background-color: #2d3748;
+      }
     }
   }
   

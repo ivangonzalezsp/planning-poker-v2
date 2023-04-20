@@ -24,7 +24,7 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   }>({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [mode, setMode] = useState<"normal" | "tshirt">("normal");
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
   const [storyURL, setStoryURL] = useState("");
 
@@ -191,8 +191,16 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
         ));
   };
 
+  const changeLanguage = (lang: string) => {
+    i18n.changeLanguage(lang);
+  };
+
   return (
     <div className={styles.pokerRoom}>
+      <div className={styles.languageSelector}>
+        <button onClick={() => changeLanguage("en")}>EN</button>
+        <button onClick={() => changeLanguage("es")}>ES</button>
+      </div>
       <h1>Scrum Poker Room</h1>
       <h2>Room ID: {roomId}</h2>
       <div className={styles.participants}>
