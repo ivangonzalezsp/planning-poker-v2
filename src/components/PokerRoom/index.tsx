@@ -5,6 +5,15 @@ import { useFirebase } from "../../firebase/useFirebase";
 import { ref, onValue, off, update } from "firebase/database";
 import { database } from "../../firebase/config";
 import { useTranslation } from "next-i18next";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 interface PokerRoomProps {
   room: string;
@@ -195,6 +204,31 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
     i18n.changeLanguage(lang);
   };
 
+  const prepareChartData = (participants: any) => {
+    const voteCount: any = {};
+    let voteSum = 0;
+    let voteCountTotal = 0;
+
+    Object.values(participants).forEach(({ vote }: any) => {
+      if (vote) {
+        voteCount[vote] = (voteCount[vote] || 0) + 1;
+        voteSum += parseFloat(vote);
+        voteCountTotal += 1;
+      }
+    });
+
+    const data = Object.entries(voteCount).map(([vote, count]) => ({
+      name: vote,
+      count,
+    }));
+
+    const average = voteCountTotal ? (voteSum / voteCountTotal).toFixed(2) : 0;
+
+    return { data, average };
+  };
+
+  const { data, average } = prepareChartData(participants);
+
   return (
     <div className={styles.pokerRoom}>
       <div className={styles.languageSelector}>
@@ -206,8 +240,11 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       <div className={styles.participants}>
         <h2>{t("participants")}</h2>
         <ul>
-          {Object.entries(participants).map(([name, { voted }]) => (
+          {Object.entries(participants).map(([name, { voted, vote }]) => (
             <li key={name}>
+              {votesVisible && vote !== null && (
+                <span className={styles.voteResultValue}>{vote}&nbsp;</span>
+              )}
               <span className={styles.participantName}>{name}</span>
               <span
                 className={`${styles.voteStatus} ${
@@ -234,12 +271,27 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
 
       {votesVisible ? (
         <div className={styles.voteResults}>
-          {Object.entries(participants).map(([name, { vote }]) => (
-            <div key={name} className={styles.voteResult}>
-              <span className={styles.voteResultName}>{name}:</span>{" "}
-              <span className={styles.voteResultValue}>{vote || "?"}</span>
-            </div>
-          ))}
+          <div className={styles.barChartContainer}>
+            <h3>Average Vote: {average}</h3>
+            <BarChart
+              width={500}
+              height={300}
+              data={data}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" />
+            </BarChart>
+          </div>
         </div>
       ) : (
         <div className={styles.voteButtons}>{renderVoteButtons()}</div>
