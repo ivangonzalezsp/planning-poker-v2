@@ -239,11 +239,11 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
       <h2>Room ID: {roomId}</h2>
       <div className={styles.participants}>
         <h2>{t("participants")}</h2>
-        <ul>
+        <ul className={styles.participantsContainer}>
           {Object.entries(participants).map(([name, { voted, vote }]) => (
             <li key={name}>
               {votesVisible && vote !== null && (
-                <span className={styles.voteResultValue}>{vote}</span>
+                <span className={styles.voteResultValue}>{vote}&nbsp;</span>
               )}
               <span className={styles.participantName}>{name}</span>
               <div className={styles.voteStatusContainer}>
