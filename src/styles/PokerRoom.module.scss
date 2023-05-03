@@ -76,12 +76,12 @@
         align-items: center;
         margin-bottom: 0.5rem;
         width: 160px;
-        overflow: hidden;
         justify-content: space-between;
         
   
         .participantName {
           margin-right: 1rem;
+          overflow: hidden;
         }
   
         .voteStatus {
