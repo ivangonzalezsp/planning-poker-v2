@@ -243,14 +243,16 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
           {Object.entries(participants).map(([name, { voted, vote }]) => (
             <li key={name}>
               {votesVisible && vote !== null && (
-                <span className={styles.voteResultValue}>{vote}&nbsp;</span>
+                <span className={styles.voteResultValue}>{vote}</span>
               )}
               <span className={styles.participantName}>{name}</span>
-              <span
-                className={`${styles.voteStatus} ${
-                  voted ? styles.voteStatusVoted : ""
-                }`}
-              />
+              <div className={styles.voteStatusContainer}>
+                <span
+                  className={`${styles.voteStatus} ${
+                    voted ? styles.voteStatusVoted : ""
+                  }`}
+                />
+              </div>
             </li>
           ))}
         </ul>
