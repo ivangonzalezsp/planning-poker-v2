@@ -14,6 +14,8 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { MiniGameWidget } from "../MiniGame/MiniGameWidget";
+import { MiniGame } from "../../types/minigames";
 
 interface PokerRoomProps {
   room: string;
@@ -36,6 +38,8 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   const { t, i18n } = useTranslation();
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
   const [storyURL, setStoryURL] = useState("");
+  const [miniGame, setMiniGame] = useState<MiniGame | null>(null);
+  const [isExplanationPhase, setIsExplanationPhase] = useState(false);
 
   useEffect(() => {
     if (roomData) {
@@ -87,6 +91,8 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
         setVotes(data.votes || {});
         setVotesVisible(data.reveal || false);
         setMode(data.mode || "normal");
+        setMiniGame(data.miniGame || null);
+        setIsExplanationPhase(data.explanationPhase || false);
       }
     );
 
@@ -162,6 +168,16 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
   const generateInviteURL = () => {
     const currentURL = `${window.location.origin}/join-room/${roomId}`;
     setInviteURL(currentURL);
+  };
+
+  const startExplanation = async () => {
+    setIsExplanationPhase(true);
+    await update(ref(database, `rooms/${roomId}`), { explanationPhase: true });
+  };
+
+  const endExplanation = async () => {
+    setIsExplanationPhase(false);
+    await update(ref(database, `rooms/${roomId}`), { explanationPhase: false });
   };
 
   const formatStoryURL = (url: string) => {
@@ -316,6 +332,17 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
               {t("saveURL")}
             </button>
           </div>
+          <div className={styles.explanationControls}>
+            {!isExplanationPhase ? (
+              <button className={styles.startExplanationButton} onClick={startExplanation}>
+                🎮 Start Story Explanation
+              </button>
+            ) : (
+              <button className={styles.endExplanationButton} onClick={endExplanation}>
+                ⏹️ End Explanation
+              </button>
+            )}
+          </div>
           {!votesVisible && (
             <button className={styles.revealButton} onClick={onRevealVotes}>
               {t("reveal")}
@@ -347,6 +374,14 @@ const PokerRoom: React.FC<PokerRoomProps> = ({ room, name }) => {
           />
         </div>
       )}
+
+      <MiniGameWidget
+        game={miniGame}
+        roomId={roomId}
+        userName={name}
+        isAdmin={isAdmin}
+        isExplanationPhase={isExplanationPhase}
+      />
     </div>
   );
 };

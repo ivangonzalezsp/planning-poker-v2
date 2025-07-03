@@ -4,6 +4,7 @@ import styles from "../../styles/Home.module.scss";
 import { push, ref, set } from "firebase/database";
 import { database } from "../../firebase/config";
 import { useTranslation } from "next-i18next";
+import { getRandomMiniGameType, createMiniGame } from "../../utils/miniGameUtils";
 
 const Home = () => {
   const [userName, setUserName] = useState("");
@@ -14,10 +15,16 @@ const Home = () => {
     const newRoomRef = push(ref(database, "rooms"));
     const roomId = newRoomRef.key || "";
 
+    // Select random mini-game for this room
+    const gameType = getRandomMiniGameType();
+    const miniGame = createMiniGame(roomId, gameType);
+
     const newRoomData = {
       name: roomName,
       admin: userName,
       participants: { [userName]: { voted: false, isAdmin: true } },
+      miniGame,
+      explanationPhase: false, // Track when story explanation is happening
     };
 
     try {
