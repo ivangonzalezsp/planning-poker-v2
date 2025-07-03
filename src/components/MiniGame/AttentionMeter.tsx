@@ -38,7 +38,7 @@ export const AttentionMeter: React.FC<AttentionMeterProps> = ({
       const newLevel = updateAttentionMeter(meterLevel, 'decay');
       if (newLevel !== meterLevel) {
         setMeterLevel(newLevel);
-        await update(ref(database, `rooms/${roomId}/miniGame/meterLevel`), newLevel);
+        await update(ref(database, `rooms/${roomId}/miniGame`), { meterLevel: newLevel });
       }
     }, 5000); // Decay every 5 seconds
 

@@ -51,7 +51,7 @@ export const EstimationPrediction: React.FC<EstimationPredictionProps> = ({
 
   return (
     <div className={styles.estimationPrediction}>
-      <h4>Predict Others' Votes</h4>
+      <h4>Predict Others&apos; Votes</h4>
       <div className={styles.predictionGrid}>
         {participants.map(participant => (
           <div key={participant} className={styles.participantPrediction}>

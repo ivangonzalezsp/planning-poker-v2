@@ -16,20 +16,18 @@ export const ComplexityBingo: React.FC<ComplexityBingoProps> = ({
   roomId,
   userName
 }) => {
-  const [userCard, setUserCard] = useState(game.bingoCards[userName] || generateRandomBingoCard());
+  const [userCard, setUserCard] = useState(game.bingoCards[userName] || { ...generateRandomBingoCard(), hasWon: false });
   const [hasWon, setHasWon] = useState(false);
 
   useEffect(() => {
     // Initialize user's bingo card if it doesn't exist
     if (!game.bingoCards[userName]) {
       const newCard = generateRandomBingoCard();
-      setUserCard(newCard);
-      update(ref(database, `rooms/${roomId}/miniGame/bingoCards/${userName}`), {
-        ...newCard,
-        hasWon: false
-      });
+      const newCardWithWinStatus = { ...newCard, hasWon: false };
+      setUserCard(newCardWithWinStatus);
+      update(ref(database, `rooms/${roomId}/miniGame/bingoCards/${userName}`), newCardWithWinStatus);
     }
-  }, []);
+  }, [game.bingoCards, roomId, userName]);
 
   useEffect(() => {
     const gameRef = ref(database, `rooms/${roomId}/miniGame/bingoCards/${userName}`);

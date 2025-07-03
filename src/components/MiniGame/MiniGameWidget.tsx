@@ -33,7 +33,7 @@ export const MiniGameWidget: React.FC<MiniGameWidgetProps> = ({
       const timer = setTimeout(() => setShowWelcome(false), 3000);
       return () => clearTimeout(timer);
     }
-  }, [game, isExplanationPhase]);
+  }, [game, isExplanationPhase, showWelcome]);
 
   if (!game || !isExplanationPhase) {
     return null;

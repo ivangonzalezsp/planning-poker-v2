@@ -32,7 +32,7 @@ export const StoryChecklist: React.FC<StoryChecklistProps> = ({
   }, [roomId]);
 
   const toggleChecklistItem = async (item: string) => {
-    const isCurrentlyChecked = checklist[item];
+    const isCurrentlyChecked = (checklist as any)[item];
     const currentCompletedBy = completedBy[item] || [];
     
     let newCompletedBy;
@@ -47,7 +47,7 @@ export const StoryChecklist: React.FC<StoryChecklistProps> = ({
     const newChecklist = {
       ...checklist,
       [item]: newCompletedBy.length > 0
-    };
+    } as any;
 
     const newCompletedByState = {
       ...completedBy,
@@ -92,12 +92,12 @@ export const StoryChecklist: React.FC<StoryChecklistProps> = ({
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
-                checked={checklist[key] || false}
+                checked={(checklist as any)[key] || false}
                 onChange={() => toggleChecklistItem(key)}
                 className={styles.checkbox}
               />
               <span className={styles.checkboxCustom}>
-                {checklist[key] ? '✓' : ''}
+                {(checklist as any)[key] ? '✓' : ''}
               </span>
               <span className={styles.itemLabel}>{label}</span>
             </label>

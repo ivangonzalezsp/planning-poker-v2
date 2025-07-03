@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ref, update, onValue, off } from 'firebase/database';
+import { ref, update, onValue, off, remove } from 'firebase/database';
 import { database } from '../../firebase/config';
 import { QuickPollsGame } from '../../types/minigames';
 import styles from '../../styles/MiniGame.module.scss';
@@ -68,7 +68,7 @@ export const QuickPolls: React.FC<QuickPollsProps> = ({
     await update(historyRef, [...currentHistory, currentPoll]);
 
     // Clear current poll
-    await update(ref(database, `rooms/${roomId}/miniGame/currentPoll`), null);
+    await remove(ref(database, `rooms/${roomId}/miniGame/currentPoll`));
   };
 
   const addOption = () => {
